@@ -21,6 +21,8 @@ int Pmeter = 1;
 
 float Pmeter_adjusted = .1; 
 
+int Count= 0;
+
 void setup() { 
 
   pinMode(piezoPin, OUTPUT); 
@@ -29,7 +31,8 @@ void setup() {
   while (!Serial){
     ;
   }
-  Serial.print ("initializing SD card");
+ 
+ Serial.print ("initializing SD card");
   // see if the card is present and can be initialized:
   if (!SD.begin(chipSelect)) {
     Serial.println("Card failed, or not present");
@@ -37,8 +40,8 @@ void setup() {
     while (1);
   }
   Serial.println("card initialized.");
-  
-  tone(piezoPin, 1000, 500);
+
+  ;
 
 } 
 void loop() {
@@ -46,8 +49,8 @@ void loop() {
 EMG1 = analogRead(EMGpin1); 
 EMG2 = analogRead(EMGpin2); 
 
-  EMGmv1 = ((EMG1 *0.012890625) - 1.65); 
-  EMGmv2 = ((EMG2 *0.012890625) - 1.65); 
+  EMGmv1 = ((EMG1 *0.012890625) - 1.65)-5; 
+  EMGmv2 = ((EMG2 *0.012890625) - 1.65)-5; 
 
   Serial.print(EMGmv1); 
 
@@ -59,36 +62,36 @@ EMG2 = analogRead(EMGpin2);
 
   Pmeter = analogRead(Pmeterpin); 
 
-  Pmeter_adjusted = 0.1*analogRead(Pmeterpin); 
+  Pmeter_adjusted = 0.005*analogRead(Pmeterpin); 
 
   Serial.println(Pmeter_adjusted); 
 
-  if(EMGmv1>=Pmeter_adjusted){ 
+//if either emg reading is higher than the threshold play a tone
+  if(EMGmv1>=Pmeter_adjusted || EMGmv2>=Pmeter_adjusted){ 
 
-    digitalWrite(piezoPin, HIGH); 
+    tone(piezoPin, 1000, 500); 
+    
   }
   
-  if(EMGmv2>=Pmeter_adjusted){ 
-
-    digitalWrite(piezoPin, HIGH); 
-
-  }
 
   else{ 
 
-    digitalWrite(piezoPin, LOW); 
+    delay(1); 
 
   } 
-
+Count=Count+1;
 delay (5); 
-
 //SD card
 // make a string for assembling the data to log:
   String dataString = "";
 
-  
+    dataString += String(Count);
+    dataString += " , ";
     dataString += String(EMGmv1);
+    dataString += " , ";
     dataString += String(EMGmv2);
+    dataString += " , ";
+    dataString += String(Pmeter_adjusted);
    
       dataString += ",";
    
