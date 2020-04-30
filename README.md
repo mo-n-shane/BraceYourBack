@@ -1,4 +1,4 @@
-# BraceYourBack
+# GotYourBack Training Brace
 #include <SPI.h>
 
 #include <SD.h>
