@@ -1,4 +1,3 @@
-# GotYourBack Training Brace
 #include <SPI.h>
 
 #include <SD.h>
@@ -30,14 +29,19 @@ void setup() {
   Serial.begin(115200); 
   while (!Serial){
     ;
-  }
+ 
+ }
  
  Serial.print ("initializing SD card");
-  // see if the card is present and can be initialized:
-  if (!SD.begin(chipSelect)) {
+ 
+ // see if the card is present and can be initialized:
+ 
+ if (!SD.begin(chipSelect)) {
     Serial.println("Card failed, or not present");
-    // don't do anything more:
-    while (1);
+   
+   // don't do anything more:
+   
+   while (1);
   }
   Serial.println("card initialized.");
 
@@ -67,6 +71,7 @@ EMG2 = analogRead(EMGpin2);
   Serial.println(Pmeter_adjusted); 
 
 //if either emg reading is higher than the threshold play a tone
+  
   if(EMGmv1>=Pmeter_adjusted || EMGmv2>=Pmeter_adjusted){ 
 
     tone(piezoPin, 1000, 500); 
@@ -81,8 +86,10 @@ EMG2 = analogRead(EMGpin2);
   } 
 Count=Count+1;
 delay (5); 
+
 //SD card
 // make a string for assembling the data to log:
+  
   String dataString = "";
 
     dataString += String(Count);
@@ -98,16 +105,21 @@ delay (5);
 
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
-  File dataFile = SD.open("datalog.txt", FILE_WRITE);
+ 
+File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
   // if the file is available, write to it
-  if (dataFile) {
+ 
+ if (dataFile) {
     dataFile.println(dataString);
     dataFile.close();
-    // print to the serial port too:
-    Serial.println(dataString);
+   
+   // print to the serial port too:
+   
+   Serial.println(dataString);
   }
   // if the file isn't open, pop up an error:
+  
   else {
     Serial.println("error opening datalog.txt");
   } 
